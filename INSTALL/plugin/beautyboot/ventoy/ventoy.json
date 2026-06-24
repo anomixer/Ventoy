@@ -1,0 +1,15 @@
+{
+  "theme": {
+    "file": "/ventoy/theme/beautyboot/theme.txt",
+    "gfxmode": "1920x1080",
+    "display_mode": "GUI",
+    "ventoy_left": "35%",
+    "ventoy_top": "35%",
+    "ventoy_width": "30%",
+    "ventoy_height": "40%"
+  },
+  "control": [
+    { "VTOY_DEFAULT_MENU_MODE": "0" },
+    { "VTOY_FILT_DOT_UNDERSCORE_FILE": "1" }
+  ]
+}

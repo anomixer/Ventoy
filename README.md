@@ -139,11 +139,3 @@ You can transfer to my paypal account `admin@ventoy.net` or just click [https://
 
 **Bitcoin**  
 Bitcoin Address `19mZDWzZgzkHCi9YX9H3fYCUuCHq3W6wfT`
-
-
-
-
-
-
-
-
