@@ -17,10 +17,26 @@
 # 
 #************************************************************************************
 
-if $GREP -q 'rdinit=/vtoy/vtoy' /proc/cmdline; then
-    echo "fix rdinit" >> $VTLOG
-    $SED "/switch_root.*\/mnt\/.installer-mp/i\ sh $VTOY_PATH/hook/debian/pve-wa.sh /mnt/.installer-mp/sbin/unconfigured.sh" -i /init
-fi
+. $VTOY_PATH/hook/ventoy-os-lib.sh
 
-$SED "/\/sys\/block\/hd\*/i\ $BUSYBOX_PATH/sh $VTOY_PATH/hook/debian/pve-disk.sh"  -i /init
-$SED "s#/sys/block/hd\*#/sys/block/dm* /sys/block/hd*#"  -i /init
+TRANSFILE=/usr/Euler/project/load/filetransfer.sh
+
+LINE=$($GREP -n 'function ft_mountCdromDir' $TRANSFILE | $AWK -F':' '{print $1}')
+
+echo "LINE=$LINE" >> $VTLOG
+
+$SED 's#FT_SR_DEV=.*#FT_SR_DEV=/dev/mapper/ventoy#g' -i $TRANSFILE
+$SED 's/function ft_mountCdromDir/function ft_mountCdromDirXX/' -i $TRANSFILE
+
+let LINE--
+$SED -n "1,${LINE}p" $TRANSFILE >> /ventoy/filetransfer.sh
+
+$CAT $VTOY_PATH/hook/euleros/hook_func.sh >> /ventoy/filetransfer.sh
+
+let LINE++
+$SED -n "${LINE},\$p" $TRANSFILE >> /ventoy/filetransfer.sh
+
+$BUSYBOX_PATH/mv /ventoy/filetransfer.sh $TRANSFILE
+
+#fix the euler os shell script
+$SED 's/-z ${harddisk_disk_list}/-z "${harddisk_disk_list}"/' -i /usr/Euler/project/disk/disk_tool.sh
