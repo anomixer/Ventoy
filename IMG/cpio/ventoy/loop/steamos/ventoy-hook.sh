@@ -19,7 +19,15 @@
 
 . $VTOY_PATH/hook/ventoy-os-lib.sh
 
-ventoy_set_inotify_script  blackPanther/ventoy-inotifyd-hook.sh
-$BUSYBOX_PATH/cp -a $VTOY_PATH/hook/blackPanther/ventoy-inotifyd-start.sh $VT_DRACUT_HOOKS/pre-udev/00-ventoy-inotifyd-start.sh
+# inject the disk hook before the run_hook phase of the stock mkinitcpio /init
+# if $GREP -q "run_hookfunctions 'run_hook' 'hook'" /init; then
+    # echo "insert ventoy-disk.sh before run_hook" >> $VTLOG
+    # $SED "/run_hookfunctions 'run_hook' 'hook'/i\\$BUSYBOX_PATH/sh $VTOY_PATH/loop/steamos/ventoy-disk-new.sh" -i /init
+# else
+    # echo "run_hook anchor not found in /init" >> $VTLOG
+# fi
 
-$SED "s#printf\(.*\)\$CMDLINE#printf\1 root=/dev/ventoy \$CMDLINE root=/dev/ventoy#" -i /lib/dracut-lib.sh
+
+$SED "s/udev /udev ventoy /g" -i /config
+
+cp -a $VTOY_PATH/loop/steamos/ventoy.hook /hooks/ventoy
